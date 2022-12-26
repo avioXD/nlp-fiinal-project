@@ -1,0 +1,28 @@
+{
+  "name": "new",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apos-to-lex-form": "^1.0.5",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "hdb": "^0.19.5",
+    "mysql": "^2.18.1",
+    "natural": "^5.2.4",
+    "node-nlp": "^4.24.0",
+    "spelling-corrector": "^3.0.0",
+    "stopword": "^2.0.5",
+    "uuid": "^9.0.0",
+    "uuid-int": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
