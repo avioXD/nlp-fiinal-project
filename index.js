@@ -45,7 +45,7 @@ router.get("/", function (req, res) {
           if (err) {
             return console.error, err;
           }
-          console.log("Results:", typeof city, city);
+          // console.log("Results:", typeof city, city);
           all_city = city;
           res.render("index", { city: city, data: data });
         }
@@ -69,16 +69,19 @@ router.get("/review/:dealer_id", (req, res) => {
   res.render("review", { data: selected_dealer });
 });
 router.post("/submit-review/:dealer_id", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
+  if (!req.params.dealer_id) {
+    res.redirect("/");
+  }
   let avg =
     (parseInt(req.body.rating1) +
       parseInt(req.body.rating2) +
       parseInt(req.body.rating3)) /
     3;
-  console.log(avg);
+  // console.log(avg);
   const nlpResult = await getSentiment(req.body.commentText);
-  console.log(nlpResult);
-  console.log(JSON.stringify(req.params.dealer_id));
+  // console.log(nlpResult);
+  // console.log(JSON.stringify(req.params.dealer_id));
   var client = hdb.createClient(dbconfig);
   client.on("error", function (err) {
     console.error("Network connection error", err);
@@ -98,7 +101,7 @@ router.post("/submit-review/:dealer_id", async (req, res) => {
             return console.log(err), err;
           }
           if (result) {
-            res.render("thanks");
+            res.redirect("/thanks");
           }
         }
       );
@@ -106,6 +109,13 @@ router.post("/submit-review/:dealer_id", async (req, res) => {
       console.log(e);
     }
   });
+});
+router.get("/thanks", (req, res) => {
+  data = [];
+  all_city = [];
+  all_dealer = [];
+
+  res.render("thanks");
 });
 /////
 
@@ -136,7 +146,7 @@ router.get("/getdealer", (req, res) => {
         }
       );
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   });
 });
@@ -145,5 +155,5 @@ app.use("/", router);
 const port = process.env.PORT || 4200;
 
 app.listen(port, () => {
-  console.log(`Application is running on port ${port}`);
+  // console.log(`Application is running on port ${port}`);
 });
