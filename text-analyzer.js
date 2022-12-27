@@ -21,11 +21,9 @@ const getSentiment = async (str) => {
   const stopWordsRemoved = stopword.removeStopwords(fixedSpelling);
   const analyzed = analyzer.getSentiment(stopWordsRemoved);
   console.log(stopWordsRemoved, analyzed);
-  if (analyzed >= 1.1) return "Very Good";
-  if (analyzed < 1 && analyzed >= 0.3) return "Good";
-  if (analyzed < 0.3 && analyzed >= 0) return "Average";
-  if (analyzed < 0 && analyzed > -2) return "No Bad";
-  if (analyzed <= -2) return "Very Bad";
+  if (analyzed == 0) return "Neutral";
+  if (analyzed < 0) return "Negative";
+  if (analyzed > 0) return "Positive";
   // if (analyzed === 0) return 0;
   return "Neutral";
 };

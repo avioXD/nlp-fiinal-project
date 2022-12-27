@@ -69,7 +69,7 @@ router.get("/review/:dealer_id", (req, res) => {
   res.render("review", { data: selected_dealer });
 });
 router.post("/submit-review/:dealer_id", async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   if (!req.params.dealer_id) {
     res.redirect("/");
   }
@@ -79,9 +79,10 @@ router.post("/submit-review/:dealer_id", async (req, res) => {
       parseInt(req.body.rating3)) /
     3;
   // console.log(avg);
-  const nlpResult = await getSentiment(req.body.commentText);
-  // console.log(nlpResult);
-  // console.log(JSON.stringify(req.params.dealer_id));
+  const comment1 = await getSentiment(req.body.rating1commentText);
+  const comment2 = await getSentiment(req.body.rating2commentText);
+  const comment3 = await getSentiment(req.body.rating3commentText);
+  console.log(JSON.stringify(req.params.dealer_id));
   var client = hdb.createClient(dbconfig);
   client.on("error", function (err) {
     console.error("Network connection error", err);
@@ -92,17 +93,40 @@ router.post("/submit-review/:dealer_id", async (req, res) => {
     }
     try {
       client.exec(
-        `INSERT INTO "HACK2BUILD#PYTHON"."T_REVIEW_F" (RPMK,KUNNR,RAVG,REM) VALUES ('${generator.uuid()}','${
+        `INSERT INTO "HACK2BUILD#PYTHON"."T_REVIEWS" (RPMK,KUNNR,RAVG,REM,CATEG) VALUES ('${generator.uuid()}','${
           req.params.dealer_id
-        }', ${avg}, '${nlpResult}')`,
-        function (err, result) {
-          client.end();
+        }', ${req.body.rating3}, '${comment3}','Overall experience')`,
+        (err, result) => {
           if (err) {
             return console.log(err), err;
           }
-          if (result) {
-            res.redirect("/thanks");
-          }
+          if (result)
+            client.exec(
+              `INSERT INTO "HACK2BUILD#PYTHON"."T_REVIEWS" (RPMK,KUNNR,RAVG,REM,CATEG) VALUES ('${generator.uuid()}','${
+                req.params.dealer_id
+              }', ${req.body.rating2}, '${comment2}', 'Friendliness') `,
+              (err, result) => {
+                if (err) {
+                  return console.log(err), err;
+                }
+                if (result)
+                  client.exec(
+                    `INSERT INTO "HACK2BUILD#PYTHON"."T_REVIEWS" (RPMK,KUNNR,RAVG,REM,CATEG) VALUES ('${generator.uuid()}','${
+                      req.params.dealer_id
+                    }', ${req.body.rating1}, '${comment1}','Schedule time')`,
+                    function (err, result) {
+                      client.end();
+                      if (err) {
+                        return console.log(err), err;
+                      }
+                      console.log(result);
+                      if (result) {
+                        res.redirect("/thanks");
+                      }
+                    }
+                  );
+              }
+            );
         }
       );
     } catch (e) {

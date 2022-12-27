@@ -67,9 +67,14 @@
                     <div class="mb-3 mt-4">
                         <div class="d-flex"> <select class="custom-select " name="CITY" style="max-width:18rem">
                                 <option disabled hidden>Choose city</option>
-                                <% for(var i=0; i<city.length; i++){ %>
-                                <option value="<%= city[i].ORT01 %>"><%= city[i].ORT01 %></option>
-                                <% } %>
+                                <%  for(var i=0; i<city.length; i++){ %>
+                                <%  if(data[0]?.ORT01 == city[i].ORT01){   %>
+                                <option selected value="<%= city[i].ORT01 %>">
+                                    <%= city[i].ORT01 %> </option>
+                                <%  } %>
+                                <option value="<%= city[i].ORT01 %>">
+                                    <%= city[i].ORT01 %></option>
+                                <%  } %>
                             </select>
                             <button class="btn btn-outline-success mx-3" type="submit">Search</button>
                         </div>
@@ -85,8 +90,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>CITY</th>
-                            <th>NAME</th>
+                            <th>NAME </th>
+                            <th>CITY </th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
